@@ -37,7 +37,7 @@ void RadixSort(long long a[], int n)
             maxi=a[i];
     for(cifra=1;maxi/cifra>0;cifra=cifra*10)
     {
-        int nr_galeti = 10, aux[n], frecv[nr_galeti]={0};
+        int nr_galeti = 10, aux[n], frecv[nr_galeti]={0,0,0,0,0,0,0,0,0,0};
         for(i=0;i<n;i++)
             frecv[(a[i]/cifra)%10]++;
         for(i=1;i<nr_galeti;i++)
