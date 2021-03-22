@@ -1,0 +1,259 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+long* a= new long[100000000];
+long long n=1;
+long* f= new long[100000000];
+
+void BubbleSort(long a[], int n)
+{
+    int i,j;
+    for(i=0;i<n-1;i++)
+        for(j=i;j<n;j++)
+            if(a[i]>a[j])
+                swap(a[i],a[j]);
+}
+
+void CountSort(long a[], int n)
+{
+    long long i, maxi= a[0], j;
+    for(i=0;i<n;i++)
+    {
+        f[a[i]]++;
+        if(a[i]>maxi)
+            maxi=a[i];
+    }
+    for(i=0;i<=maxi;i++)
+        if(f[i]>0)
+            for(j=0;j<f[i];j++)
+                continue;
+}
+
+void RadixSort(long a[], int n)
+{
+    int maxi=a[0], i, cifra;
+    for(i=1;i<n;i++)
+        if(a[i]>maxi)
+            maxi=a[i];
+    for(cifra=1;maxi/cifra>0;cifra=cifra*10)
+    {
+        int nr_galeti = 10, frecv[nr_galeti]={0,0,0,0,0,0,0,0,0,0};
+        long* aux= new long[n];
+        for(i=0;i<n;i++)
+            frecv[(a[i]/cifra)%10]++;
+        for(i=1;i<nr_galeti;i++)
+            frecv[i]=frecv[i]+frecv[i-1];
+        for(i=n-1;i>=0;i--)
+                aux[--frecv[(a[i]/cifra)%10]]=a[i];
+        for(i=0;i<n;i++)
+            a[i]=aux[i];
+    }
+}
+
+void Interclasare(long a[], int st, int mij, int dr)
+{
+    int n1=mij-st+1, n2=dr-mij, i, j, na=st;
+    long* L= new long[n1];
+    long* M= new long[n2];
+    for(i=0;i<n1;i++)
+        L[i]=a[i+st];
+    for(i=0;i<n2;i++)
+        M[i]=a[i+mij+1];
+    i=j=0;
+    while(i<n1 && j<n2)
+        if(L[i]<=M[j])
+        {
+            a[na++]=L[i];
+            i++;
+        }
+        else
+        {
+            a[na++]=M[j];
+            j++;
+        }
+    while(i<n1)
+    {
+        a[na++]=L[i];
+        i++;
+    }
+    while(j<n2)
+    {
+        a[na++]=M[j];
+        j++;
+    }
+}
+
+void MergeSort(long a[], int st, int dr)
+{
+    int mij;
+    if(st<dr)
+    {
+        mij=(dr+st)/2;
+        MergeSort(a,st,mij);
+        MergeSort(a,mij+1,dr);
+        Interclasare(a,st,mij,dr);
+    }
+}
+
+void QuickSort(long a[], int st, int dr)
+{
+	if(st < dr)
+	{
+		int m=(st+dr)/2, i=st , j=dr, d=0;
+		swap(a[m],a[st]);
+		while(i<j)
+		{
+			if(a[i]>a[j])
+			{
+				swap(a[i],a[j]);
+				d=1-d;
+			}
+			i+=d;
+			j-=1-d;
+		}
+		QuickSort(a,st,i-1);
+		QuickSort(a,i+1,dr);
+	}
+}
+
+void TestBubbleSort(long a[], int n)
+{
+        clock_t start, end;
+        start = clock();
+        BubbleSort(a,n);
+        end = clock();
+        double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+        cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
+}
+
+void TestCountSort(long a[], int n)
+{
+        clock_t start, end;
+        start = clock();
+        CountSort(a,n);
+        end = clock();
+        double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+        cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
+}
+
+void TestRadixSort(long a[], int n)
+{
+        clock_t start, end;
+        start = clock();
+        RadixSort(a,n);
+        end = clock();
+        double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+        cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
+}
+
+void TestMergeSort(long a[], int n)
+{
+        clock_t start, end;
+        start = clock();
+        MergeSort(a,1,n);
+        end = clock();
+        double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+        cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
+}
+
+void TestQuickSort(long a[], int n)
+{
+        clock_t start, end;
+        start = clock();
+        QuickSort(a,1,n);
+        end = clock();
+        double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+        cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
+}
+
+void TestNativeSort(long a[], int n)
+ {
+        clock_t start, end;
+        start = clock();
+        sort(a, a+n);
+        end = clock();
+        double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+        cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
+ }
+
+int main()
+{
+    int i, j;
+    char x[25];
+    cin>>x;
+
+    if(strstr(x,"bubblesort"))
+    {
+        for(j=0;j<7;j++)
+        {
+            n=n*10;
+            for(i=0;i<n;i++)
+                a[i]=rand()%n;
+            cout<<"10^"<<j+1<<": ";
+            TestBubbleSort(a,n);
+        }
+    }
+
+    if(strstr(x,"countsort"))
+    {
+        for(j=0;j<7;j++)
+        {
+            n=n*10;
+            for(i=0;i<n;i++)
+                a[i]=rand()%n;
+            cout<<"10^"<<j+1<<": ";
+            TestCountSort(a,n);
+        }
+    }
+
+    if(strstr(x,"radixsort"))
+    {
+        for(j=0;j<7;j++)
+        {
+            n=n*10;
+            for(i=0;i<n;i++)
+                a[i]=rand()%n;
+            cout<<"10^"<<j+1<<": ";
+            TestRadixSort(a,n);
+        }
+    }
+
+    if(strstr(x,"mergesort"))
+    {
+        for(j=0;j<7;j++)
+        {
+            n=n*10;
+            for(i=0;i<n;i++)
+                a[i]=rand()%n;
+            cout<<"10^"<<j+1<<": ";
+            TestMergeSort(a,n);
+        }
+    }
+
+    if(strstr(x,"quicksort"))
+    {
+        for(j=0;j<7;j++)
+        {
+            n=n*10;
+            for(i=0;i<n;i++)
+                a[i]=rand()%n;
+            cout<<"10^"<<j+1<<": ";
+            TestQuickSort(a,n);
+        }
+    }
+
+    if(strstr(x, "nativesort"))
+    {
+        for(j=0;j<7;j++)
+        {
+            n=n*10;
+            for(i=0;i<n;i++)
+                a[i]=rand()%n;
+            cout<<"10^"<<j+1<<": ";
+            TestNativeSort(a,n);
+        }
+    }
+
+    return 0;
+}
