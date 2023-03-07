@@ -15,6 +15,20 @@ void BubbleSort(long a[], int n)
                 swap(a[i],a[j]);
 }
 
+void ShellSort(long a[], int n) {
+    for (int gap = n/2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            int curr = a[i];
+            
+            int j;
+            for (j = i; j >= gap && a[j - gap] > curr; j -= gap) {
+                a[j] = a[j - gap];
+            }
+            a[j] = curr;
+        }
+    }
+}
+
 void CountSort(long a[], int n)
 {
     long long i, maxi= a[0], j;
@@ -127,6 +141,16 @@ void TestBubbleSort(long a[], int n)
         cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
 }
 
+void TestShellSort(long a[], int n)
+{
+        clock_t start, end;
+        start = clock();
+        ShellSort(a, n);
+        end = clock();
+        double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+        cout << "Time taken by program is : " << fixed << time_taken << setprecision(5)<< " sec "<<"\n";
+}
+
 void TestCountSort(long a[], int n)
 {
         clock_t start, end;
@@ -192,6 +216,18 @@ int main()
                 a[i]=rand()%n;
             cout<<"10^"<<j+1<<": ";
             TestBubbleSort(a,n);
+        }
+    }
+    
+    if(strstr(x,"shellsort"))
+    {
+        for(j=0;j<7;j++)
+        {
+            n=n*10;
+            for(i=0;i<n;i++)
+                a[i]=rand()%n;
+            cout<<"10^"<<j+1<<": ";
+            TestShellSort(a,n);
         }
     }
 
